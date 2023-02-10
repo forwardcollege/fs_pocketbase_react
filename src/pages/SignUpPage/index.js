@@ -2,6 +2,9 @@ import React, { useState, useMemo } from 'react';
 import { Card, Container, PasswordInput, Space, Title, Button, TextInput, Group } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { showNotification } from '@mantine/notifications';
+import PocketBase from 'pocketbase';
+
+const pb = new PocketBase('https://nathanonn-special-telegram-7r64v976jq2xxq7-8090.preview.app.github.dev');
 
 const SignUpPage = () => {
     const [ name, setName ] = useState('');
@@ -19,6 +22,12 @@ const SignUpPage = () => {
         event.preventDefault();
         setLoading(true);
         try {
+            const record = await pb.collection('users').create({
+                "email": email,
+                "password": password,
+                "passwordConfirm": passwordConfirm,
+                "name": name
+            });
             setLoading(false);
             showNotification({
                 title: 'Success',

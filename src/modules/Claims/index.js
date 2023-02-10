@@ -4,6 +4,9 @@ import { showNotification } from '@mantine/notifications';
 import { openConfirmModal } from '@mantine/modals';
 
 import AddNewClaim from './add_new';
+import PocketBase from 'pocketbase';
+
+const pb = new PocketBase('https://nathanonn-special-telegram-7r64v976jq2xxq7-8090.preview.app.github.dev');
 
 const Claims = () => {
     const [ claims, setClaims ] = useState([]);
@@ -17,6 +20,12 @@ const Claims = () => {
     const getClaims = async () => {
         setLoaded(false);
         try {
+            const records = await pb.collection('claims').getFullList(200, {
+                sort: '-created',
+                filter: `user.id = "${pb.authStore.model.id}"`,
+                $autoCancel: false
+            });
+            setClaims(records);
             setLoaded(true);
         } catch (error) {
             showNotification({
@@ -32,6 +41,7 @@ const Claims = () => {
     const handleClaimDelete = (claim_id) => async () => {
         setLoaded(false);
         try {
+            await pb.collection('claims').delete(claim_id);
             getClaims();
         } catch (error) {
             showNotification({
@@ -90,7 +100,7 @@ const Claims = () => {
                         <Group position="center">
                             <Button
                                 component='a'
-                                href={""}
+                                href={'https://nathanonn-special-telegram-7r64v976jq2xxq7-8090.preview.app.github.dev/api/files/'+claim.collectionId+'/'+claim.id+'/'+claim.receipt}
                                 target={"_blank"}
                                 variant="filled"
                                 color="blue"

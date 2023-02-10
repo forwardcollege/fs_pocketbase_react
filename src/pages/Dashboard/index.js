@@ -1,13 +1,18 @@
 import React, { useState, useMemo } from 'react';
 import { Card, Container, Group, Button, Space, Title, Grid } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
+import PocketBase from 'pocketbase';
 
 import Claims from '../../modules/Claims';
+
+const pb = new PocketBase('https://nathanonn-special-telegram-7r64v976jq2xxq7-8090.preview.app.github.dev');
 
 const Dashboard = () => {
     const navigate = useNavigate();
 
-    const isLoggedIn = true;
+    const isLoggedIn = useMemo(() => {
+        return pb.authStore.isValid;
+    },[ pb.authStore.isValid ]);
 
     return (
     <Container
@@ -74,6 +79,7 @@ const Dashboard = () => {
                     variant="subtle"
                     color="gray"
                     onClick={() => {
+                        pb.authStore.clear();
                         navigate('/');
                     }}
                     >

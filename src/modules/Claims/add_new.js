@@ -4,6 +4,9 @@ import { Modal, Grid, Group, Button, Space, LoadingOverlay, Text, NumberInput, T
 import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 import { DatePicker } from '@mantine/dates';
 import { showNotification } from '@mantine/notifications';
+import PocketBase from 'pocketbase';
+
+const pb = new PocketBase('https://nathanonn-special-telegram-7r64v976jq2xxq7-8090.preview.app.github.dev');
 
 const AddNewClaim = ({
     onRefresh = () => {},
@@ -28,6 +31,28 @@ const AddNewClaim = ({
     const handleAddnew = async () => {
         setLoading(true);
         try {
+            const record = await axios({
+                method: 'POST',
+                url: 'https://nathanonn-special-telegram-7r64v976jq2xxq7-8090.preview.app.github.dev/api/collections/claims/records',
+                data: {
+                    receipt_date: receiptDate.toISOString(),
+                    total_amount: totalAmount,
+                    notes,
+                    receipt: file,
+                    user: pb.authStore.model.id
+                },
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${pb.authStore.token}`
+                }
+            });
+            // const record = await pb.collection('claims').create({
+            //     "receipt_date": receiptDate.toISOString(),
+            //     "total_amount": totalAmount,
+            //     "notes": notes,
+            //     "receipt": file,
+            //     "user": pb.authStore.model.id
+            // });
             setLoading(false);
             setOpened(false);
             showNotification({
