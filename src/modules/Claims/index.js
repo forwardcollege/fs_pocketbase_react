@@ -6,7 +6,7 @@ import { openConfirmModal } from '@mantine/modals';
 import AddNewClaim from './add_new';
 import PocketBase from 'pocketbase';
 
-const pb = new PocketBase('https://nathanonn-special-telegram-7r64v976jq2xxq7-8090.preview.app.github.dev');
+const pb = new PocketBase(process.env.REACT_APP_POCKETBASE_URL);
 
 const Claims = () => {
     const [ claims, setClaims ] = useState([]);
@@ -100,7 +100,7 @@ const Claims = () => {
                         <Group position="center">
                             <Button
                                 component='a'
-                                href={'https://nathanonn-special-telegram-7r64v976jq2xxq7-8090.preview.app.github.dev/api/files/'+claim.collectionId+'/'+claim.id+'/'+claim.receipt}
+                                href={ process.env.REACT_APP_POCKETBASE_URL +'api/files/'+claim.collectionId+'/'+claim.id+'/'+claim.receipt}
                                 target={"_blank"}
                                 variant="filled"
                                 color="blue"

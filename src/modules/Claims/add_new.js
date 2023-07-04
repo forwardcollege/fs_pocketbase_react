@@ -6,7 +6,7 @@ import { DatePicker } from '@mantine/dates';
 import { showNotification } from '@mantine/notifications';
 import PocketBase from 'pocketbase';
 
-const pb = new PocketBase('https://nathanonn-special-telegram-7r64v976jq2xxq7-8090.preview.app.github.dev');
+const pb = new PocketBase(process.env.REACT_APP_POCKETBASE_URL);
 
 const AddNewClaim = ({
     onRefresh = () => {},
@@ -31,28 +31,28 @@ const AddNewClaim = ({
     const handleAddnew = async () => {
         setLoading(true);
         try {
-            const record = await axios({
-                method: 'POST',
-                url: 'https://nathanonn-special-telegram-7r64v976jq2xxq7-8090.preview.app.github.dev/api/collections/claims/records',
-                data: {
-                    receipt_date: receiptDate.toISOString(),
-                    total_amount: totalAmount,
-                    notes,
-                    receipt: file,
-                    user: pb.authStore.model.id
-                },
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${pb.authStore.token}`
-                }
-            });
-            // const record = await pb.collection('claims').create({
-            //     "receipt_date": receiptDate.toISOString(),
-            //     "total_amount": totalAmount,
-            //     "notes": notes,
-            //     "receipt": file,
-            //     "user": pb.authStore.model.id
+            // const record = await axios({
+            //     method: 'POST',
+            //     url: process.env.REACT_APP_POCKETBASE_URL+'/api/collections/claims/records',
+            //     data: {
+            //         receipt_date: receiptDate.toISOString(),
+            //         total_amount: totalAmount,
+            //         notes,
+            //         receipt: file,
+            //         user: pb.authStore.model.id
+            //     },
+            //     headers: {
+            //         'Content-Type': 'multipart/form-data',
+            //         'Authorization': `Bearer ${pb.authStore.token}`
+            //     }
             // });
+            let formData = new FormData();
+            formData.append('receipt_date', receiptDate.toISOString());
+            formData.append('total_amount', totalAmount);
+            formData.append('notes', notes);
+            formData.append('receipt', file);
+            formData.append('user', pb.authStore.model.id);
+            const record = await pb.collection('claims').create(formData);
             setLoading(false);
             setOpened(false);
             showNotification({

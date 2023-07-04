@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { showNotification } from '@mantine/notifications';
 import PocketBase from 'pocketbase';
 
-const pb = new PocketBase('https://nathanonn-special-telegram-7r64v976jq2xxq7-8090.preview.app.github.dev');
+const pb = new PocketBase(process.env.REACT_APP_POCKETBASE_URL);
 
 const LoginPage = () => {
     const [ email, setEmail ] = useState('');

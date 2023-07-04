@@ -5,7 +5,7 @@ import PocketBase from 'pocketbase';
 
 import Claims from '../../modules/Claims';
 
-const pb = new PocketBase('https://nathanonn-special-telegram-7r64v976jq2xxq7-8090.preview.app.github.dev');
+const pb = new PocketBase(process.env.REACT_APP_POCKETBASE_URL);
 
 const Dashboard = () => {
     const navigate = useNavigate();
